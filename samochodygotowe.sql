@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 04 Sty 2024, 00:50
--- Wersja serwera: 10.4.25-MariaDB
--- Wersja PHP: 8.1.10
+-- Czas generowania: 04 Sty 2024, 15:02
+-- Wersja serwera: 10.4.19-MariaDB
+-- Wersja PHP: 8.0.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -121,6 +121,22 @@ CREATE TABLE `samochody` (
   `rocznik` int(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Zrzut danych tabeli `samochody`
+--
+
+INSERT INTO `samochody` (`id_samochodu`, `id_koloru`, `id_marki`, `rocznik`) VALUES
+(1, 1, 1, 2000),
+(2, 2, 2, 1995),
+(3, 3, 3, 2000),
+(4, 4, 5, 1999),
+(5, 5, 2, 2020),
+(6, 6, 10, 1820),
+(7, 7, 5, 2014),
+(8, 8, 2, 2005),
+(9, 9, 3, 1006),
+(10, 10, 6, 2024);
+
 -- --------------------------------------------------------
 
 --
@@ -176,13 +192,17 @@ ALTER TABLE `marka`
 -- Indeksy dla tabeli `samochody`
 --
 ALTER TABLE `samochody`
-  ADD PRIMARY KEY (`id_samochodu`);
+  ADD PRIMARY KEY (`id_samochodu`),
+  ADD KEY `id_koloru` (`id_koloru`),
+  ADD KEY `id_marki` (`id_marki`);
 
 --
 -- Indeksy dla tabeli `zamowienia`
 --
 ALTER TABLE `zamowienia`
-  ADD PRIMARY KEY (`id_zamowienia`);
+  ADD PRIMARY KEY (`id_zamowienia`),
+  ADD KEY `id_klienta` (`id_klienta`),
+  ADD KEY `id_samochodu` (`id_samochodu`);
 
 --
 -- AUTO_INCREMENT dla zrzuconych tabel
@@ -210,13 +230,31 @@ ALTER TABLE `marka`
 -- AUTO_INCREMENT dla tabeli `samochody`
 --
 ALTER TABLE `samochody`
-  MODIFY `id_samochodu` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_samochodu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT dla tabeli `zamowienia`
 --
 ALTER TABLE `zamowienia`
   MODIFY `id_zamowienia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- Ograniczenia dla zrzutów tabel
+--
+
+--
+-- Ograniczenia dla tabeli `samochody`
+--
+ALTER TABLE `samochody`
+  ADD CONSTRAINT `samochody_ibfk_1` FOREIGN KEY (`id_koloru`) REFERENCES `kolor` (`id_koloru`),
+  ADD CONSTRAINT `samochody_ibfk_2` FOREIGN KEY (`id_marki`) REFERENCES `marka` (`id_marki`);
+
+--
+-- Ograniczenia dla tabeli `zamowienia`
+--
+ALTER TABLE `zamowienia`
+  ADD CONSTRAINT `zamowienia_ibfk_1` FOREIGN KEY (`id_klienta`) REFERENCES `klient` (`id_klienta`),
+  ADD CONSTRAINT `zamowienia_ibfk_2` FOREIGN KEY (`id_samochodu`) REFERENCES `samochody` (`id_samochodu`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
